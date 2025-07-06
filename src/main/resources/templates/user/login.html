@@ -29,6 +29,7 @@
     <br/>
 
     <button onclick="Login()">Login</button>
+    <button onclick="getAccessToken()">Access Token</button>
 </div>
 
 <script>
@@ -45,11 +46,37 @@
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(data),
             success: (data, status, xhr)=>{
-                alert(JSON.stringify(data));
+                let refreshToken = xhr.getResponseHeader("RefreshToken");
+                alert("html RefreshToken : " + refreshToken);
+                if(refreshToken === null || refreshToken === "" || refreshToken === "Bearer " + null || Number(refreshToken) <= 0){
+                    alert("로그인 실패");
+                }else{
+                    alert("로그인 성공")
+                    localStorage.setItem("RefreshToken", refreshToken);
+                }
             },
             error: (data, status, xhr)=>{
                 alert(JSON.stringify(data));
             }
+        });
+    }
+
+    function getAccessToken(){
+        $.ajax({
+            url: "/api/auth",
+            method: "POST",
+            beforeSend : function(xhr){
+                xhr.setRequestHeader("RefreshToken", localStorage.getItem("RefreshToken"));
+            },
+            contentType : 'application/json; charset=utf-8',
+            success: (data, status, xhr)=>{
+                let accessToken = xhr.getResponseHeader("Authorization");
+                alert("html AccessToken : " + accessToken);
+                localStorage.setItem("Authorization", accessToken);
+            },
+            error: (data, status, xhr)=>{
+                alert(JSON.stringify(data));
+            },
         });
     }
 </script>

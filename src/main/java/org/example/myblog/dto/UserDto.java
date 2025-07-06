@@ -8,9 +8,9 @@ public class UserDto {
     // Signup Request Dto
     @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor
     public static class SignupReqDto {
-        public String username;
-        public String password;
-        public String name;
+        String username;
+        String password;
+        String name;
 
         public User toEntity() { return User.of(getUsername(), getPassword(), getName()); }
     }
@@ -24,13 +24,13 @@ public class UserDto {
     // Login Request Dto
     @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor
     public static class LoginReqDto {
-        public String username;
-        public String password;
+        String username;
+        String password;
     }
 
     // Login Response Dto
     @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor
     public static class LoginResDto {
-        public Long id;
+        String refreshToken;
     }
 }

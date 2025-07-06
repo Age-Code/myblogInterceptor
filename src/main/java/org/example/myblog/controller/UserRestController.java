@@ -3,6 +3,7 @@ package org.example.myblog.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.myblog.dto.UserDto;
 import org.example.myblog.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserRestController {
 
     final UserService userService;
+    private final String prefix = "Bearer ";
 
     @PostMapping("/signup")
     public ResponseEntity<UserDto.SignupResDto> signup(@RequestBody UserDto.SignupReqDto signupReqDto){
@@ -22,8 +24,9 @@ public class UserRestController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDto.LoginResDto> login(@RequestBody UserDto.LoginReqDto loginReqDto){
-        return ResponseEntity.ok(userService.login(loginReqDto));
+    public ResponseEntity<Void> login(@RequestBody UserDto.LoginReqDto loginReqDto){
+        UserDto.LoginResDto res = userService.login(loginReqDto);
+        return ResponseEntity.status(HttpStatus.OK).header("RefreshToken", prefix + res.getRefreshToken()).build();
     }
 
 }
