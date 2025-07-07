@@ -19,16 +19,30 @@ public class PostServiceimpl implements PostService {
 
     // Create
     @Override
-    public PostDto.CreateResDto create(PostDto.CreateReqDto createReqDto) {
-        PostDto.CreateResDto res = postRepository.save(createReqDto.toEntity()).toCreateRespDto();
+    public PostDto.CreateResDto create(PostDto.CreateSevDto createSevDto) {
+        Long reqUserId = createSevDto.getReqUserId();
+        if(reqUserId == null){
+            throw new RuntimeException("not login");
+        }
+
+        System.out.println("PostRepository createSevDto title " + createSevDto.getTitle());
+
+        PostDto.CreateResDto res = postRepository.save(createSevDto.toEntity()).toCreateRespDto();
 
         return res;
     }
 
     // Detail
     @Override
-    public PostDto.DetailResDto detail(PostDto.DetailReqDto detailReqDto){
-        PostDto.DetailResDto res = postMapper.detail(detailReqDto);
+    public PostDto.DetailResDto detail(PostDto.DetailSevDto detailSevDto){
+        PostDto.DetailResDto res = postMapper.detail(detailSevDto);
+
+        Long reqUserId = detailSevDto.getReqUserId();
+        if(res.getUserId().equals(reqUserId)){
+            res.setApproved(true);
+        }else{
+            res.setApproved(false);
+        }
 
         return res;
     }
@@ -43,17 +57,24 @@ public class PostServiceimpl implements PostService {
     }
 
     // Update
-    public void update(PostDto.UpdateReqDto updateReqDto){
-        Post post = postRepository.findById(updateReqDto.getId()).orElse(null);
+    public void update(PostDto.UpdateSevDto updateSevDto){
+        Post post = postRepository.findById(updateSevDto.getId()).orElse(null);
         if(post == null){
             throw new RuntimeException("no data");
         }
 
-        if(updateReqDto.getTitle() != null){
-            post.setTitle(updateReqDto.getTitle());
+        Long reqUserId = updateSevDto.getReqUserId();
+        if(reqUserId == null){
+            throw new RuntimeException("not login");
         }
-        if(updateReqDto.getContent() != null){
-            post.setContent(updateReqDto.getContent());
+        if(!reqUserId.equals(post.getUserId())){
+            throw new RuntimeException("not author matched");
+        }
+        if(updateSevDto.getTitle() != null){
+            post.setTitle(updateSevDto.getTitle());
+        }
+        if(updateSevDto.getContent() != null){
+            post.setContent(updateSevDto.getContent());
         }
 
         postRepository.save(post);
@@ -61,10 +82,18 @@ public class PostServiceimpl implements PostService {
 
     // Delete
     @Override
-    public void delete(PostDto.DeleteReqDto deleteReqDto){
-        Post post = postRepository.findById(deleteReqDto.getId()).orElse(null);
+    public void delete(PostDto.DeleteSevDto deleteSevDto){
+        Post post = postRepository.findById(deleteSevDto.getId()).orElse(null);
         if(post == null){
             throw new RuntimeException("no data");
+        }
+
+        Long reqUserId = deleteSevDto.getReqUserId();
+        if(reqUserId == null){
+            throw new RuntimeException("not login");
+        }
+        if(!reqUserId.equals(post.getUserId())){
+            throw new RuntimeException("not author matched");
         }
 
         post.setDeleted(true);

@@ -7,9 +7,9 @@ import java.util.List;
 
 @Service
 public interface PostService {
-    PostDto.CreateResDto create(PostDto.CreateReqDto createReqDto);
-    PostDto.DetailResDto detail(PostDto.DetailReqDto detailReqDto);
+    PostDto.CreateResDto create(PostDto.CreateSevDto createSevDto);
+    PostDto.DetailResDto detail(PostDto.DetailSevDto detailSevDto);
     List<PostDto.ListResDto> list(PostDto.ListReqDto listReqDto);
-    void update(PostDto.UpdateReqDto updateReqDto);
-    void delete(PostDto.DeleteReqDto deleteReqDto);
+    void update(PostDto.UpdateSevDto updateSevDto);
+    void delete(PostDto.DeleteSevDto deleteSevDto);
 }

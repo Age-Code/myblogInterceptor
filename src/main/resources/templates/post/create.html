@@ -41,6 +41,9 @@
         $.ajax({
             url: "/api/post",
             method: "POST",
+            headers:{
+                "Authorization" : localStorage.getItem("Authorization")
+            },
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(data),
             success: (data, status, xhr)=>{

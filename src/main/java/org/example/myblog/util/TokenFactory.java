@@ -47,6 +47,11 @@ public class TokenFactory {
         return null;
     }
 
+    // AccessToken 유효성 확인
+    public Long validateAccessToken(String key){
+        return validate(key);
+    }
+
     // Token 생성
     public String generate(Long id, String type){
         String returnData = null;
