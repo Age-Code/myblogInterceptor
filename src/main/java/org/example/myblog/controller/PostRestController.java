@@ -28,13 +28,8 @@ public class PostRestController {
     public ResponseEntity<PostDto.CreateResDto> create(@RequestBody PostDto.CreateReqDto createReqDto, HttpServletRequest request) {
         Long reqUserId = getReqUserId(request);
 
-        System.out.println("Controller createReqDto title: " + createReqDto.getTitle());
-        System.out.println("Controller reqUserId: " + createReqDto.getTitle());
-
         PostDto.CreateSevDto createSevDto = PostDto.CreateSevDto.builder().reqUserId(reqUserId).build();
         createSevDto = (PostDto.CreateSevDto) createSevDto.afterBuild(createReqDto);
-
-        System.out.println("Controller createSevDto title: " + createSevDto.getTitle());
 
         return ResponseEntity.ok(postService.create(createSevDto));
     }

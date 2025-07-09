@@ -25,8 +25,6 @@ public class PostServiceimpl implements PostService {
             throw new RuntimeException("not login");
         }
 
-        System.out.println("PostRepository createSevDto title " + createSevDto.getTitle());
-
         PostDto.CreateResDto res = postRepository.save(createSevDto.toEntity()).toCreateRespDto();
 
         return res;
